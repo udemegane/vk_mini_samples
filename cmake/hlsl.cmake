@@ -6,9 +6,13 @@
 # that it is compatible with CMake < 3.25.
 find_package(Vulkan QUIET REQUIRED)
 get_filename_component(_VULKAN_LIB_DIR ${Vulkan_LIBRARY} DIRECTORY)
+set(Vulkan_dxc_EXECUTABLE "C:\\VulkanSDK\\1.3.246.1\\Bin\\dxc.exe")
+
 find_file(Vulkan_dxc_EXECUTABLE
   NAMES dxc${CMAKE_EXECUTABLE_SUFFIX}
   PATHS ${_VULKAN_LIB_DIR}/../Bin)
+
+
 if(Vulkan_dxc_EXECUTABLE)
   message(STATUS "--> using DXC from: ${Vulkan_dxc_EXECUTABLE}")
 else()

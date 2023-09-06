@@ -1,0 +1,95 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 22,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "description": "Base configuration",
+            "hidden": true,
+            "cacheVariables": {},
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "windows-ninja-msvc-slang",
+            "displayName": "Windos Ninja/MSVC with Slang",
+            "inherits": "base",
+            "generator": "Ninja Multi-Config",
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "toolset": {
+                "value": "host=x86,version=14.29",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "USE_SLANG": "1",
+                "CMAKE_MAKE_PROGRAM": "${sourceDir}/tools/ninja/ninja.exe",
+                "CMAKE_CXX_COMPILER": "cl"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [
+                        "Windows"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "windows-ninja-msvc-hlsl",
+            "displayName": "Windos Ninja/MSVC with HLSL",
+            "inherits": "base",
+            "generator": "Ninja Multi-Config",
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "toolset": {
+                "value": "host=x86,version=14.29",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "USE_HLSL": "1",
+                "CMAKE_MAKE_PROGRAM": "${sourceDir}/tools/ninja/ninja.exe",
+                "CMAKE_CXX_COMPILER": "cl"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [
+                        "Windows"
+                    ]
+                }
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "MSVC-Slang-release",
+            "displayName": "Release",
+            "configurePreset": "windows-ninja-msvc-slang",
+            "configuration": "Release"
+        },
+        {
+            "name": "MSVC-Slang-debug",
+            "displayName": "Debug",
+            "configurePreset": "windows-ninja-msvc-slang",
+            "configuration": "Debug"
+        },
+        {
+            "name": "MSVC-HLSL-release",
+            "displayName": "Release",
+            "configurePreset": "windows-ninja-msvc-hlsl",
+            "configuration": "Release"
+        },
+        {
+            "name": "MSVC-HLSL-debug",
+            "displayName": "Debug",
+            "configurePreset": "windows-ninja-msvc-hlsl",
+            "configuration": "Debug"
+        }
+    ]
+}

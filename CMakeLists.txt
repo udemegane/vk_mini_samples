@@ -4,40 +4,41 @@ project(vk_mini_samples LANGUAGES C CXX)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 20)
 
-#configure the external projects
+# configure the external projects
 set(EXTERNALS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/externals")
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${EXTERNALS_DIR}/_build")
 
 if(WIN32)
-execute_process(
+  execute_process(
     COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -A "${CMAKE_GENERATOR_PLATFORM}" -S "${EXTERNALS_DIR}" -B "${EXTERNALS_DIR}/_build"
     WORKING_DIRECTORY "${EXTERNALS_DIR}/_build"
-	COMMAND_ECHO STDOUT
-)
+    COMMAND_ECHO STDOUT
+  )
 else(WIN32)
-execute_process(
+  execute_process(
     COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=RelWithDebInfo "${EXTERNALS_DIR}"
     WORKING_DIRECTORY "${EXTERNALS_DIR}/_build"
-	COMMAND_ECHO STDOUT
-)
+    COMMAND_ECHO STDOUT
+  )
 endif(WIN32)
-#build the external projects
+
+# build the external projects
 execute_process(
-	COMMAND ${CMAKE_COMMAND} --build "${EXTERNALS_DIR}/_build" --config RelWithDebInfo --parallel
-    WORKING_DIRECTORY "${EXTERNALS_DIR}/_build"
-	COMMAND_ECHO STDOUT
+  COMMAND ${CMAKE_COMMAND} --build "${EXTERNALS_DIR}/_build" --config RelWithDebInfo --parallel
+  WORKING_DIRECTORY "${EXTERNALS_DIR}/_build"
+  COMMAND_ECHO STDOUT
 )
 
-#--------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
 # look for nvpro_core 1) as a sub-folder 2) at some other locations
 # this cannot be put anywhere else since we still didn't find setup.cmake yet
 if(NOT BASE_DIRECTORY)
   find_path(BASE_DIRECTORY
     NAMES nvpro_core/cmake/setup.cmake
-    PATHS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR}/../.. 
+    PATHS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR}/../..
     REQUIRED
     DOC "Directory containing nvpro_core"
-    )
+  )
 endif()
 
 # Set the install diectory in the project directory
@@ -64,8 +65,8 @@ set(SAMPLES_COMMON_DIR ${CMAKE_CURRENT_SOURCE_DIR}/common)
 set(NVPRO_CORE_DIR ${BASE_DIRECTORY}/nvpro_core)
 
 if(MSVC)
-    add_definitions(/wd26812)  # 'enum class' over 'enum'
-    add_definitions(/wd26451)  # Arithmetic overflow, casting 4 byte value to 8 byte value
+  add_definitions(/wd26812) # 'enum class' over 'enum'
+  add_definitions(/wd26451) # Arithmetic overflow, casting 4 byte value to 8 byte value
 endif()
 
 # Packages shared by all projects
@@ -86,11 +87,10 @@ if(${USE_HLSL} AND ${USE_SLANG})
 endif()
 
 if(${USE_HLSL} OR ${USE_SLANG})
-	set(USE_GLSL FALSE)
+  set(USE_GLSL FALSE)
 else()
-	set(USE_GLSL TRUE)
+  set(USE_GLSL TRUE)
 endif()
-
 
 # Need to be added last, as it uses defines from packages
 _add_nvpro_core_lib()
@@ -102,23 +102,24 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/media DESTINATION ${OUTPUT_PATH})
 # Sub examples
 add_subdirectory(samples)
 
-# Install - copying the media directory
-install(DIRECTORY "media" 
-        CONFIGURATIONS Release 
-        DESTINATION "bin_${ARCH}")
-install(DIRECTORY "media" 
-        CONFIGURATIONS Debug 
-        DESTINATION "bin_${ARCH}_debug")
+# Rtcamp
+add_subdirectory(rtcamp9)
 
+# Install - copying the media directory
+install(DIRECTORY "media"
+  CONFIGURATIONS Release
+  DESTINATION "bin_${ARCH}")
+install(DIRECTORY "media"
+  CONFIGURATIONS Debug
+  DESTINATION "bin_${ARCH}_debug")
 
 # Fake project to add files
-set(EXTRAFILES CMakeLists.txt 
-	README.md
-    test.py
-    cmake/hlsl.cmake
-    cmake/slang.cmake
+set(EXTRAFILES CMakeLists.txt
+  README.md
+  test.py
+  cmake/hlsl.cmake
+  cmake/slang.cmake
 )
 add_custom_target(Settings SOURCES ${EXTRAFILES})
 set_property(TARGET Settings PROPERTY FOLDER "Extra")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${EXTRAFILES})
-

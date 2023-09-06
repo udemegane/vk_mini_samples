@@ -246,7 +246,7 @@ private:
   struct Vertex
   {
     nvmath::vec2f pos;
-  };
+  };createPipelines
 
   void createPipelineLayout()
   {

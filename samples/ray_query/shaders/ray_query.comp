@@ -366,6 +366,6 @@ void main()
   {  // Do accumulation over time
     float a         = 1.0F / float(pushConst.frame + 1);
     vec3  old_color = imageLoad(image, ivec2(LaunchID.xy)).xyz;
-    imageStore(image, ivec2(LaunchID.xy), vec4(mix(old_color, pixel_color, a), 1.0F));
+    imageStore(image, ivec2(LaunchID.xy), vec4(mix(old_color, pixel_color, a) + vec4(0.0f,0.0f,0.0f,1.0f), 1.0F));
   }
 }
