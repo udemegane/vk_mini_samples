@@ -384,10 +384,11 @@ private:
     VkAccelerationStructureGeometryTrianglesDataKHR triangles{VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR};
     triangles.vertexFormat = VK_FORMAT_R32G32B32A32_SFLOAT; // vec3 vertex position data.
     triangles.vertexData.deviceAddress = vertexAddress;
+
     triangles.vertexStride = sizeof(nvh::PrimitiveVertex);
     triangles.indexType = VK_INDEX_TYPE_UINT32;
     triangles.indexData.deviceAddress = indexAddress;
-    triangles.maxVertex = static_cast<uint32_t>(prim.vertices.size());
+    triangles.maxVertex = static_cast<uint32_t>(prim.vertices.size()) - 1;
     // triangles.transformData; // Identity
 
     // Identify the above data as containing opaque triangles.
